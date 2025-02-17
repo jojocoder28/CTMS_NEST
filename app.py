@@ -22,7 +22,7 @@ def preprocess(data):
     data['Late_Study'] = (data['Completion Date'] - data['Primary Completion Date']).dt.days
     data['Days_Since_Started'] = (pd.Timestamp.now() - data['Start Date']).dt.days
     data['Start_Season'] = data['Start Date'].dt.month % 12 // 3 + 1  # 1=Winter, 2=Spring
-    data['Current Recruitment Rate(CRR)'] = (data['Enrollment'] / data['Study_Duration']) * 30
+    data['Current Recruitment Rate(CRR)'] = round((data['Enrollment'] / data['Study_Duration']) * 30,2)
     
     df = data.copy()
 
@@ -259,7 +259,7 @@ elif page == "Manage Trials":
         submit_button = st.form_submit_button("Submit Trial")
         
         if submit_button:
-            Current_recruitment_rate = enrollment / (today - start_date).days * 30
+            Current_recruitment_rate = round(enrollment / (today - start_date).days * 30,2)
             study_duration = (completion_date - start_date).dt.days
             # Prepare the new trial data
             new_trial = {
@@ -328,7 +328,7 @@ if trial_param:
     # new_rr = st.number_input("Recruitment Rate (RR)", min_value=0.0, max_value=100.0, 
     #                          value=trial_data["Recruitment Rate (RR)"], step=0.1)
     new_enrollment = st.number_input("Enrollment", min_value=0, value=int(trial_data.get("Enrollment", 0)), step=1)
-    new_study_result = st.selectbox("Study Result", options=('YES','NO'))
+    new_study_result = st.selectbox("Study Results", options=('YES','NO'))
     new_completion_time = st.number_input("Completion Time (days)", min_value=0, 
                                           value=int(trial_data.get("Study_Duration", 0)), step=1)
 
@@ -336,7 +336,7 @@ if trial_param:
         st.session_state.data_copy.at[trial_index, "Study Status"] = new_status
         # st.session_state.data_copy.at[trial_index, "Recruitment Rate (RR)"] = new_rr
         st.session_state.data_copy.at[trial_index, "Enrollment"] = new_enrollment
-        st.session_state.data_copy.at[trial_index, "Study Result"] = new_study_result
+        st.session_state.data_copy.at[trial_index, "Study Results"] = new_study_result
         st.session_state.data_copy.at[trial_index, "Study_Duration"] = new_completion_time
         st.success("Changes saved successfully!")
 
