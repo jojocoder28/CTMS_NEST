@@ -169,11 +169,11 @@ if page == "CTMS":
     if "data_copy" not in st.session_state:
         st.session_state.data_copy = data_copy.copy()
     data_copy=st.session_state.data_copy.copy()
-    trial_list = st.session_state.data_copy["Study Title"].tolist()
+    trial_list = st.session_state.data_copy["NCT Number"].tolist()
     selected_trial = st.sidebar.selectbox("Select a Trial", trial_list)
     
     if selected_trial:
-        trial_data = data_copy[data_copy["Study Title"] == selected_trial].iloc[0]
+        trial_data = data_copy[data_copy["NCT Number"] == selected_trial].iloc[0]
         
         st.subheader(f"Trial: {trial_data['Study Title']}")
         st.write(f"**Study Status:** {trial_data['Study Status']}")
@@ -195,8 +195,8 @@ if page == "CTMS":
         
         # Edit Button
         if st.button("Edit Trial Data"):
-            trial_index = data_copy[data_copy["Study Title"] == selected_trial].index[0]
-            temp_df=data_copy[data_copy["Study Title"] == selected_trial]
+            trial_index = data_copy[data_copy["NCT Number"] == selected_trial].index[0]
+            temp_df=data_copy[data_copy["NCT Number"] == selected_trial]
             st.session_state.selected_trial_index = trial_index
             st.session_state.temp_df=temp_df
             st.session_state.selected_trial = selected_trial
