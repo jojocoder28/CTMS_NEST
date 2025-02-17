@@ -342,4 +342,5 @@ if trial_param:
 
     if st.button("Back to Dashboard"):
         del st.session_state.selected_trial
+        del st.query_params.trial
         st.rerun()
