@@ -10,7 +10,5 @@ pycaret
 scipy
 scikit-learn
 matplotlib
-numpy
-pandas
 seaborn
 shap
