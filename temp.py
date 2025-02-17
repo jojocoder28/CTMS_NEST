@@ -378,7 +378,7 @@ if trial_param:
     # new_rr = st.number_input("Recruitment Rate (RR)", min_value=0.0, max_value=100.0, 
     #                          value=trial_data["Recruitment Rate (RR)"], step=0.1)
     new_enrollment = st.number_input("Enrollment", min_value=0, value=int(trial_data.get("Enrollment", 0)), step=1)
-    new_study_result = st.selectbox("Study Result", options=('YES','NO'))
+    new_study_result = st.selectbox("Study Results", ['YES','NO'])
     new_completion_time = st.number_input("Completion Time (days)", min_value=0, 
                                           value=int(trial_data.get("Study_Duration", 0)), step=1)
 
@@ -386,7 +386,7 @@ if trial_param:
         st.session_state.data_copy.at[trial_index, "Study Status"] = new_status
         # st.session_state.data_copy.at[trial_index, "Recruitment Rate (RR)"] = new_rr
         st.session_state.data_copy.at[trial_index, "Enrollment"] = new_enrollment
-        st.session_state.data_copy.at[trial_index, "Study Result"] = new_study_result
+        st.session_state.data_copy.at[trial_index, "Study Results"] = new_study_result
         st.session_state.data_copy.at[trial_index, "Study_Duration"] = new_completion_time
         st.success("Changes saved successfully!")
 
