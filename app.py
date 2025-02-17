@@ -9,7 +9,7 @@ label_encoders = load('./label_encoders_method2.joblib')
 model = load('./lightgbm_model_method2.joblib')
 data = pd.read_excel("./test_data.xlsx")
 saved_data=data.copy()
-data['Current Recruitment Rate(CRR)'] = 0.0
+
 flag=10
 def preprocess(data):
     date_columns = ['Start Date', 'Primary Completion Date', 'Completion Date', 'Last Update Posted']
@@ -22,7 +22,8 @@ def preprocess(data):
     data['Late_Study'] = (data['Completion Date'] - data['Primary Completion Date']).dt.days
     data['Days_Since_Started'] = (pd.Timestamp.now() - data['Start Date']).dt.days
     data['Start_Season'] = data['Start Date'].dt.month % 12 // 3 + 1  # 1=Winter, 2=Spring
-
+    data['Current Recruitment Rate(CRR)'] = (data['Enrollment'] / data['Study_Duration']) * 30
+    
     df = data.copy()
 
     study_design_split = df['Study Design'].str.split('|', expand=True)
@@ -181,7 +182,7 @@ if page == "CTMS":
         st.write(f"**Interventions:** {trial_data['Interventions']}")
         st.write(f"**Enrollment:** {trial_data['Enrollment']}")
         st.write(f"**Study Duration:** {trial_data['Study_Duration']} days")
-        st.write(f"**Recruitment Rate (RR):** {trial_data['Recruitment Rate (RR)']}")
+        st.write(f"**Predicted Recruitment Rate (RR):** {trial_data['Recruitment Rate (RR)']}")
         
         # Risk alerts
         if trial_data['Study Status'] in ["RECRUITING", "ENROLLING_BY_INVITATION", "ACTIVE_NOT_RECRUITING"] and trial_data['Study Results'] == "NO": 
@@ -241,13 +242,14 @@ elif page == "Manage Trials":
         conditions = st.multiselect('Conditions', conditions_data)
         interventions = st.multiselect('Interventions', interventions_data)
         sex = st.selectbox('Sex', sex_options)
-        age = st.number_input('Age', min_value=18, max_value=100, step=1)
+        # age = st.number_input('Age', min_value=18, max_value=100, step=1)
+        age = st.selectbox('Age',data['Age'].dropna().unique())
         phases = st.selectbox('Phases', data['Phases'].dropna().unique())
         enrollment = st.number_input('Enrollment', min_value=1, max_value=10000, step=1)
         funder_type = st.selectbox('Funder Type', funder_type_options)
         study_type = st.selectbox('Study Type', study_type_options)
         locations = st.text_input('Locations')
-        study_duration = st.number_input('Study Duration (days)', min_value=1, max_value=10000, step=1)
+        # study_duration = st.number_input('Study Duration (days)', min_value=1, max_value=10000, step=1)
         allocation = st.selectbox('Allocation', allocation_options)
         intervention_model = st.selectbox('Intervention Model', intervention_model_options)
         primary_purpose = st.selectbox('Primary Purpose', primary_purpose_options)
@@ -258,6 +260,7 @@ elif page == "Manage Trials":
         
         if submit_button:
             Current_recruitment_rate = enrollment / (today - start_date).days * 30
+            study_duration = (completion_date - start_date).dt.days
             # Prepare the new trial data
             new_trial = {
                 "NCT Number": NCT_Number,
@@ -316,7 +319,7 @@ if trial_param:
     trial_data = st.session_state.data_copy.iloc[trial_index]
     
         
-    print(trial_data)
+    # print(trial_data)
 
     st.header(f"Trial Details: {trial_data['Study Title']}")
 

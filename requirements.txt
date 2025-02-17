@@ -4,11 +4,7 @@ numpy
 joblib
 plotly
 openpyxl
-lightgbm
-lime
-pycaret
 scipy
 scikit-learn
 matplotlib
 seaborn
-shap
