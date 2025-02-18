@@ -260,7 +260,7 @@ elif page == "Manage Trials":
         
         if submit_button:
             Current_recruitment_rate = round(enrollment / (today - start_date).days * 30,2)
-            study_duration = (completion_date - start_date).dt.days
+            study_duration = (completion_date - start_date).days
             # Prepare the new trial data
             new_trial = {
                 "NCT Number": NCT_Number,
