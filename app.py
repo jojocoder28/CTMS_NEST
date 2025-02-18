@@ -174,7 +174,7 @@ if page == "CTMS":
     
     if selected_trial:
         trial_data = data_copy[data_copy["NCT Number"] == selected_trial].iloc[0]
-        
+        trial_data['Current Recruitment Rate(CRR)'] = round((trial_data['Enrollment'] / trial_data['Study_Duration']) * 30,2)
         st.subheader(f"Trial: {trial_data['Study Title']}")
         st.write(f"**Study Status:** {trial_data['Study Status']}")
         st.write(f"**Study Results:** {trial_data['Study Results']}")
